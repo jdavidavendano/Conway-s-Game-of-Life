@@ -14,7 +14,7 @@ var grid = new Array(canvasWidth / gridSize)
 function setup() {
   const cnv = createCanvas(canvasWidth, canvasHeigth);
   cnv.style("display", "block");
-  cnv.parent(document.getElementById('game'));
+  cnv.parent(document.getElementById("game"));
 }
 
 const gridLinesButton = document.getElementById("gridLines");
@@ -84,7 +84,10 @@ function gameOfLife(g) {
     https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
   */
 
-  // No borders
+  let nG = g.map(elm => {
+    return elm.slice();
+  });
+
   for (let i = 0; i < g.length; i++) {
     for (let j = 0; j < g[i].length; j++) {
       let neighbors =
@@ -99,20 +102,27 @@ function gameOfLife(g) {
       if (g[i][j]) {
         if (neighbors < 2 || neighbors > 3) {
           // Rule 1 & 3
-          g[i][j] = 0;
+          nG[i][j] = 0;
         }
         // Rule 2 is implicit
       } else {
         if (neighbors === 3) {
           // Rule 4
-          g[i][j] = 1;
+          nG[i][j] = 1;
         }
       }
     }
   }
 
-  return g;
+  return nG;
 }
+
+const clearAllButton = document.getElementById("clearAll");
+clearAllButton.onclick = () => {
+  grid = new Array(canvasWidth / gridSize)
+    .fill()
+    .map(() => new Array(canvasHeigth / gridSize).fill(0));
+};
 
 function draw() {
   background("#F00");
